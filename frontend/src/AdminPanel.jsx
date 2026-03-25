@@ -6,7 +6,7 @@ function AdminPanel() {
   const user = JSON.parse(localStorage.getItem('user'));
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', imageUrl: '/product.jpg' });
-  const [editingId, setEditingId] = useState(null); // Пази ID-то на продукта, който редактираме
+  const [editingId, setEditingId] = useState(null);
 
   if (!user || user.role !== 'admin') {
     return <h2 style={{ textAlign: 'center', marginTop: '100px', color: '#ff4d4d' }}>⛔ Достъпът е отказан.</h2>;
@@ -14,23 +14,22 @@ function AdminPanel() {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get('http://localhost:5001/api/products');
+      const res = await axios.get('https://aquasense-backend-hg8e.onrender.com/api/products');
       setProducts(res.data);
     } catch (error) { console.error(error); }
   };
 
   useEffect(() => { fetchProducts(); }, []);
 
-  // Добавяне ИЛИ Редактиране
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`http://localhost:5001/api/products/${editingId}`, newProduct);
+        await axios.put(`https://aquasense-backend-hg8e.onrender.com/api/products/${editingId}`, newProduct);
         alert('Продуктът е обновен!');
         setEditingId(null);
       } else {
-        await axios.post('http://localhost:5001/api/products', newProduct);
+        await axios.post('https://aquasense-backend-hg8e.onrender.com/api/products', newProduct);
         alert('Продуктът е добавен!');
       }
       setNewProduct({ name: '', price: '', description: '', imageUrl: '/product.jpg' });
@@ -38,17 +37,15 @@ function AdminPanel() {
     } catch (error) { alert('Грешка при запис.'); }
   };
 
-  // Изтриване
   const handleDelete = async (id) => {
     if (window.confirm("Сигурни ли сте, че искате да изтриете този продукт?")) {
       try {
-        await axios.delete(`http://localhost:5001/api/products/${id}`);
+        await axios.delete(`https://aquasense-backend-hg8e.onrender.com/api/products/${id}`);
         fetchProducts();
       } catch (error) { alert("Грешка при изтриване."); }
     }
   };
 
-  // Зареждане на данните във формата за редакция
   const handleEdit = (product) => {
     setEditingId(product._id);
     setNewProduct({ name: product.name, price: product.price, description: product.description, imageUrl: product.imageUrl });

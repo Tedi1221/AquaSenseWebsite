@@ -8,7 +8,7 @@ function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('http://localhost:5001/api/products');
+        const res = await axios.get('https://aquasense-backend-hg8e.onrender.com/api/products');
         setProducts(res.data);
       } catch (error) { console.error(error); }
     };
@@ -16,7 +16,6 @@ function Products() {
   }, []);
 
   const handleBuy = (product) => {
-    // Взимаме текущата количка, добавяме новия продукт и я запазваме пак
     const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
     currentCart.push(product);
     localStorage.setItem('cart', JSON.stringify(currentCart));
@@ -27,7 +26,6 @@ function Products() {
     <div style={{ padding: '50px 20px', textAlign: 'center', minHeight: '80vh', maxWidth: '1200px', margin: '0 auto' }}>
       <h1 style={{ color: '#00d2ff', fontSize: '3rem', marginBottom: '50px' }}>Нашите продукти</h1>
       
-      {/* ТУК Е МАГИЯТА ЗА 3 ПРОДУКТА НА РЕД (CSS Grid) */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 350px))', justifyContent: 'center', gap: '40px' }}>
         
         {products.length === 0 ? <p style={{ gridColumn: '1 / -1' }}>В момента няма налични продукти.</p> : null}

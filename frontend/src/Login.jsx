@@ -19,24 +19,22 @@ function Login() {
 
     try {
       if (isLogin) {
-        // ВХОД
-        const res = await axios.post('http://localhost:5001/api/login', {
+        // ВХОД (С новия реален линк)
+        const res = await axios.post('https://aquasense-backend-hg8e.onrender.com/api/login', {
           email: formData.email,
           password: formData.password
         });
         
-        // Запазваме данните локално
         localStorage.setItem('user', JSON.stringify(res.data.user));
         localStorage.setItem('token', res.data.token);
         
-        // Пренасочваме към профила и презареждаме, за да се ъпдейтне менюто
         navigate('/profile');
         window.location.reload();
       } else {
-        // РЕГИСТРАЦИЯ
-        const res = await axios.post('http://localhost:5001/api/register', formData);
+        // РЕГИСТРАЦИЯ (С новия реален линк)
+        const res = await axios.post('https://aquasense-backend-hg8e.onrender.com/api/register', formData);
         setMessage(res.data.message);
-        setIsLogin(true); // Връщаме формата на Вход
+        setIsLogin(true);
       }
     } catch (error) {
       setMessage(error.response?.data?.message || "Възникна грешка при връзката със сървъра!");
@@ -54,26 +52,16 @@ function Login() {
 
         <form onSubmit={handleSubmit} className="auth-form">
           {!isLogin && (
-            <input 
-              type="text" name="name" placeholder="Вашето име" 
-              value={formData.name} onChange={handleChange} required 
-            />
+            <input type="text" name="name" placeholder="Вашето име" value={formData.name} onChange={handleChange} required />
           )}
-          <input 
-            type="email" name="email" placeholder="Имейл адрес" 
-            value={formData.email} onChange={handleChange} required 
-          />
-          <input 
-            type="password" name="password" placeholder="Парола" 
-            value={formData.password} onChange={handleChange} required 
-          />
+          <input type="email" name="email" placeholder="Имейл адрес" value={formData.email} onChange={handleChange} required />
+          <input type="password" name="password" placeholder="Парола" value={formData.password} onChange={handleChange} required />
           <button type="submit" className="water-button" style={{ width: '100%', marginTop: '10px' }}>
             {isLogin ? 'Влез' : 'Регистрирай се'}
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: '20px', cursor: 'pointer', color: '#aaa' }} 
-           onClick={() => setIsLogin(!isLogin)}>
+        <p style={{ textAlign: 'center', marginTop: '20px', cursor: 'pointer', color: '#aaa' }} onClick={() => setIsLogin(!isLogin)}>
           {isLogin ? 'Нямате профил? Регистрирайте се тук.' : 'Вече имате профил? Влезте тук.'}
         </p>
       </div>

@@ -13,8 +13,8 @@ function Dashboard() {
 
   const fetchData = async () => {
     try {
-      // Заявка към новия порт 5001
-      const response = await axios.get('http://localhost:5001/api/data');
+      // С новия реален линк
+      const response = await axios.get('https://aquasense-backend-hg8e.onrender.com/api/data');
       setSensorData(response.data);
     } catch (error) {
       console.error("Грешка при връзка с бекенда:", error);
@@ -49,9 +49,7 @@ function Dashboard() {
 
   const chartOptions = {
     responsive: true,
-    plugins: {
-      legend: { labels: { color: 'white' } },
-    },
+    plugins: { legend: { labels: { color: 'white' } } },
     scales: {
       y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } },
       x: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } }
