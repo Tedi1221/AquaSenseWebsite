@@ -1,29 +1,29 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar';
 import LandingPage from './LandingPage';
-import Dashboard from './Dashboard';
 import Login from './Login';
-import Profile from './Profile';
+import Dashboard from './Dashboard';
 import AdminPanel from './AdminPanel';
+import Profile from './Profile';
 import Products from './Products';
-import LiveDemo from './LiveDemo';
 import Cart from './Cart';
-import About from './About';
+import ProductDetails from './ProductDetails'; // Ето го правилно импортиран!
+import './App.css';
 
 function App() {
   return (
     <Router>
-      <Navbar /> 
+      <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/products" element={<Products />} />
-        <Route path="/demo" element={<LiveDemo />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/about" element={<About />} />
+        {/* Ето го новият път за индивидуалния продукт */}
+        <Route path="/product/:id" element={<ProductDetails />} />
       </Routes>
     </Router>
   );

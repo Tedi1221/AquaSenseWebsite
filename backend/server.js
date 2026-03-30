@@ -27,11 +27,18 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 // ДОБАВЕНО: Схема за Продуктите в магазина
+// ДОБАВЕНО: Схема за Продуктите в магазина (с ревюта)
 const productSchema = new mongoose.Schema({
   name: String,
   price: Number,
   description: String,
-  imageUrl: String
+  imageUrl: String,
+  reviews: [{
+    userName: String,
+    rating: Number,
+    comment: String,
+    date: { type: Date, default: Date.now }
+  }]
 });
 const Product = mongoose.model('Product', productSchema);
 
@@ -56,6 +63,24 @@ app.post('/api/products', async (req, res) => {
 app.get('/api/products', async (req, res) => {
   try { const products = await Product.find(); res.status(200).json(products); } 
   catch (error) { res.status(500).json(error); }
+});
+
+// Взимане на ЕДИН конкретен продукт по ID
+app.get('/api/products/:id', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    res.status(200).json(product);
+  } catch (error) { res.status(500).json(error); }
+});
+
+// Добавяне на ревю към продукт
+app.post('/api/products/:id/reviews', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    product.reviews.push(req.body);
+    await product.save();
+    res.status(201).json(product);
+  } catch (error) { res.status(500).json(error); }
 });
 
 // Редактиране на продукт (PUT)
