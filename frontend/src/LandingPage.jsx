@@ -1,18 +1,21 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Импортираме преводача
 import './App.css';
 
 function LandingPage() {
+  const { t } = useTranslation(); // Инициализираме го
+
   return (
     <div className="landing-page">
       {/* HERO СЕКЦИЯ */}
       <header className="hero-section">
         <div className="hero-content">
-          <h1>Бъдещето на вашите растения е тук.</h1>
-          <p>Aqua-Sense Pro следи, анализира и полива автоматично. Вие просто се наслаждавате.</p>
+          <h1 className="gradient-text">{t('hero_title')}</h1>
+          <p>{t('hero_subtitle')}</p>
           <div className="hero-buttons">
-            <Link to="/products"><button className="water-button primary-btn">🛒 Купи сега - 30€</button></Link>
+            <Link to="/products"><button className="water-button primary-btn">🛒 {t('buy_now')}</button></Link>
             <Link to="/demo">
-              <button className="water-button secondary-btn">💻 Виж Live Demo</button>
+              <button className="water-button secondary-btn">💻 {t('see_demo')}</button>
             </Link>
           </div>
         </div>
@@ -25,7 +28,7 @@ function LandingPage() {
 
       {/* ВИДЕО СЕКЦИЯ (promo-video.mp4) */}
       <section className="video-section">
-        <h2>Вижте Aqua-Sense в действие</h2>
+        <h2>{t('video_title')}</h2>
         <div className="video-container">
           <video 
             src="/promo-video.mp4" 
@@ -41,12 +44,12 @@ function LandingPage() {
       {/* КАКВО ИМА В КУТИЯТА (productbox.jpg) */}
       <section className="box-section">
         <div className="box-content">
-          <h2>Какво получавате в комплекта?</h2>
+          <h2>{t('box_title')}</h2>
           <ul className="box-features">
-            <li>✅ Основен сензорен модул (Влага и Светлина)</li>
-            <li>✅ Микро-помпа с 1.5м силиконов маркуч</li>
-            <li>✅ Захранващ адаптер и USB-C кабел</li>
-            <li>✅ Безплатен достъп до Cloud платформата</li>
+            <li>✅ {t('box_feature_1')}</li>
+            <li>✅ {t('box_feature_2')}</li>
+            <li>✅ {t('box_feature_3')}</li>
+            <li>✅ {t('box_feature_4')}</li>
           </ul>
         </div>
         <div className="box-image-container">
@@ -56,17 +59,17 @@ function LandingPage() {
 
       {/* РЕВЮТА ОТ КЛИЕНТИ */}
       <section className="reviews-section">
-        <h2>Какво казват нашите клиенти</h2>
+        <h2>{t('reviews_title')}</h2>
         <div className="reviews-container">
           <div className="review-card">
             ⭐⭐⭐⭐⭐
-            <p>"Откакто имам Aqua-Sense, орхидеите ми най-накрая цъфнаха! Забравям да поливам, но системата не забравя."</p>
-            <span>- Мария И.</span>
+            <p>"{t('review_1_text')}"</p>
+            <span>- {t('review_1_author')}</span>
           </div>
           <div className="review-card">
             ⭐⭐⭐⭐⭐
-            <p>"Уникален продукт. Интеграцията с телефона през Wi-Fi работи безотказно. Препоръчвам!"</p>
-            <span>- Димитър К.</span>
+            <p>"{t('review_2_text')}"</p>
+            <span>- {t('review_2_author')}</span>
           </div>
         </div>
       </section>

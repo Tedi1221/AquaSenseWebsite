@@ -1,41 +1,46 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // <-- ТОВА Е ПРАВИЛНИЯТ ИМПОРТ
 import './App.css';
 
 function Navbar() {
   const navigate = useNavigate();
+  // Инициализираме преводача правилно
+  const { t, i18n } = useTranslation(); 
+  
   const userString = localStorage.getItem('user');
   const user = userString ? JSON.parse(userString) : null;
-
-  // State за темата
   const [isLightMode, setIsLightMode] = useState(false);
 
-  // Проверяваме дали потребителят е избрал светла тема преди
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
+    if (localStorage.getItem('theme') === 'light') {
       setIsLightMode(true);
       document.body.classList.add('light-mode');
     }
   }, []);
 
-  // Функция за превключване на темата
   const toggleTheme = () => {
-    if (isLightMode) {
-      document.body.classList.remove('light-mode');
-      localStorage.setItem('theme', 'dark');
-      setIsLightMode(false);
-    } else {
-      document.body.classList.add('light-mode');
-      localStorage.setItem('theme', 'light');
-      setIsLightMode(true);
+    if (isLightMode) { 
+      document.body.classList.remove('light-mode'); 
+      localStorage.setItem('theme', 'dark'); 
+      setIsLightMode(false); 
+    } else { 
+      document.body.classList.add('light-mode'); 
+      localStorage.setItem('theme', 'light'); 
+      setIsLightMode(true); 
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    navigate('/login');
+  // ФУНКЦИЯ ЗА СМЯНА НА ЕЗИКА
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'bg' ? 'en' : 'bg';
+    i18n.changeLanguage(newLang);
+  };
+
+  const handleLogout = () => { 
+    localStorage.removeItem('user'); 
+    localStorage.removeItem('token'); 
+    navigate('/login'); 
     window.location.reload(); 
   };
 
@@ -45,27 +50,29 @@ function Navbar() {
         <Link to="/">🌱 Aqua-Sense</Link>
       </div>
       <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-        <Link to="/">Начало</Link>
-        <Link to="/products">Продукти</Link>
-        <Link to="/about">За нас</Link>
+        <Link to="/">{t('nav_home')}</Link>
+        <Link to="/products">{t('nav_products')}</Link>
+        <Link to="/about">{t('nav_about')}</Link>
         <Link to="/demo" className="nav-demo-btn">Live Demo</Link>
         <Link to="/cart" style={{ fontSize: '1.5rem', textDecoration: 'none' }}>🛒</Link>
         
-        {/* БУТОН ЗА СМЯНА НА ТЕМАТА */}
-        <button onClick={toggleTheme} style={{ background: 'transparent', border: 'none', fontSize: '1.5rem', cursor: 'pointer', outline: 'none' }}>
+        <button onClick={toggleTheme} style={{ background: 'transparent', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}>
           {isLightMode ? '🌙' : '☀️'}
+        </button>
+
+        {/* БУТОН ЗА СМЯНА НА ЕЗИКА */}
+        <button onClick={toggleLanguage} style={{ background: 'transparent', border: '1px solid #aaa', color: 'inherit', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>
+          {i18n.language === 'bg' ? 'EN' : 'БГ'}
         </button>
 
         {user ? (
           <>
-            {user.role === 'admin' && (
-              <Link to="/admin" style={{ color: 'gold', fontWeight: 'bold' }}>👑 Админ</Link>
-            )}
+            {user.role === 'admin' && <Link to="/admin" style={{ color: 'gold', fontWeight: 'bold' }}>👑 {t('nav_admin')}</Link>}
             <Link to="/profile" style={{ color: '#00ff88', fontWeight: 'bold' }}>👤 {user.name}</Link>
-            <button onClick={handleLogout} className="nav-logout-btn">Изход</button>
+            <button onClick={handleLogout} className="nav-logout-btn">{t('nav_logout')}</button>
           </>
         ) : (
-          <Link to="/login" className="nav-login-btn">Вход / Регистрация</Link>
+          <Link to="/login" className="nav-login-btn">{t('nav_login')}</Link>
         )}
       </div>
     </nav>
