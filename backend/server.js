@@ -74,6 +74,75 @@ app.delete('/api/products/:id', async (req, res) => {
   } catch (error) { res.status(500).json(error); }
 });
 
+// Схема за ПОРЪЧКИ
+const orderSchema = new mongoose.Schema({
+  userEmail: String,
+  customerName: String,
+  address: String,
+  phone: String,
+  items: Array,
+  totalPrice: Number,
+  status: { type: String, default: 'Pending' }, // Pending, Approved, Rejected, Shipped
+  createdAt: { type: Date, default: Date.now }
+});
+const Order = mongoose.model('Order', orderSchema);
+
+// Схема за ТИКЕТИ (Съпорт)
+const ticketSchema = new mongoose.Schema({
+  userEmail: String,
+  subject: String,
+  message: String,
+  status: { type: String, default: 'Open' }, // Open, Answered, Closed
+  adminReply: { type: String, default: '' },
+  createdAt: { type: Date, default: Date.now }
+});
+const Ticket = mongoose.model('Ticket', ticketSchema);
+
+// --- ПЪТИЩА ЗА ПОРЪЧКИ ---
+app.post('/api/orders', async (req, res) => {
+  try {
+    const newOrder = new Order(req.body);
+    await newOrder.save();
+    res.status(201).json(newOrder);
+  } catch (error) { res.status(500).json(error); }
+});
+
+app.get('/api/orders', async (req, res) => {
+  try {
+    const orders = await Order.find().sort({ createdAt: -1 });
+    res.status(200).json(orders);
+  } catch (error) { res.status(500).json(error); }
+});
+
+app.put('/api/orders/:id/status', async (req, res) => {
+  try {
+    const updatedOrder = await Order.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
+    res.status(200).json(updatedOrder);
+  } catch (error) { res.status(500).json(error); }
+});
+
+// --- ПЪТИЩА ЗА ТИКЕТИ (СЪПОРТ) ---
+app.post('/api/tickets', async (req, res) => {
+  try {
+    const newTicket = new Ticket(req.body);
+    await newTicket.save();
+    res.status(201).json(newTicket);
+  } catch (error) { res.status(500).json(error); }
+});
+
+app.get('/api/tickets', async (req, res) => {
+  try {
+    const tickets = await Ticket.find().sort({ createdAt: -1 });
+    res.status(200).json(tickets);
+  } catch (error) { res.status(500).json(error); }
+});
+
+app.put('/api/tickets/:id/reply', async (req, res) => {
+  try {
+    const updatedTicket = await Ticket.findByIdAndUpdate(req.params.id, { adminReply: req.body.reply, status: 'Answered' }, { new: true });
+    res.status(200).json(updatedTicket);
+  } catch (error) { res.status(500).json(error); }
+});
 
 // 3. ПЪТИЩА ЗА ВХОД И РЕГИСТРАЦИЯ
 app.post('/api/register', async (req, res) => {
