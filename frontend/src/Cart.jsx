@@ -1,106 +1,124 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
 
 function Cart() {
-  const [cartItems, setCartItems] = useState([]);
-  const [showCheckout, setShowCheckout] = useState(false);
-  const [formData, setFormData] = useState({ address: '', phone: '' });
+  const [cart, setCart] = useState([]);
+  const [orderInfo, setOrderInfo] = useState({ name: '', address: '', phone: '' });
   const navigate = useNavigate();
-  
-  const userString = localStorage.getItem('user');
-  const user = userString ? JSON.parse(userString) : null;
+  const user = JSON.parse(localStorage.getItem('user'));
 
+  // Зареждане на количката при старт
   useEffect(() => {
-    const items = JSON.parse(localStorage.getItem('cart')) || [];
-    setCartItems(items);
+    const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    setCart(savedCart);
+    if (user) {
+      setOrderInfo(prev => ({ ...prev, name: user.name }));
+    }
   }, []);
 
-  const handleRemove = (index) => {
-    const newCart = [...cartItems];
-    newCart.splice(index, 1);
-    setCartItems(newCart);
+  // ФУНКЦИЯ ЗА ПРЕМАХВАНЕ НА ПРОДУКТ (СЪС СИГНАЛ)
+  const removeFromCart = (index) => {
+    const newCart = cart.filter((_, i) => i !== index);
+    setCart(newCart);
     localStorage.setItem('cart', JSON.stringify(newCart));
+    
+    // 🚀 ПРАЩАМЕ СИГНАЛ КЪМ NAVBAR ДА ОБНОВИ ЧИСЛОТО ВЕДНАГА
+    window.dispatchEvent(new Event('cartUpdated'));
   };
 
-  const total = cartItems.reduce((sum, item) => sum + Number(item.price), 0);
+  const calculateTotal = () => {
+    return cart.reduce((sum, item) => sum + Number(item.price), 0);
+  };
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
     if (!user) {
-      alert("Моля, влезте в профила си, за да завършите поръчката!");
-      navigate('/login');
-      return;
+      alert("Моля, влезте в профила си, за да направите поръчка.");
+      return navigate('/login');
     }
+    if (cart.length === 0) return alert("Количката е празна!");
+
+    const orderData = {
+      userEmail: user.email,
+      customerName: orderInfo.name,
+      address: orderInfo.address,
+      phone: orderInfo.phone,
+      items: cart,
+      totalPrice: calculateTotal()
+    };
 
     try {
-      const orderData = {
-        userEmail: user.email,
-        customerName: user.name,
-        address: formData.address,
-        phone: formData.phone,
-        items: cartItems,
-        totalPrice: total
-      };
-
       await axios.post('https://aquasense-backend-hg8e.onrender.com/api/orders', orderData);
+      alert('🎉 Поръчката е приета успешно! Благодарим ви!');
       
-      alert("✅ Поръчката е приета успешно! Очаквайте потвърждение.");
-      setCartItems([]);
+      // ИЗЧИСТВАНЕ И СИГНАЛ
       localStorage.removeItem('cart');
-      setShowCheckout(false);
-      navigate('/profile'); // Пращаме го в профила да си види поръчката
+      setCart([]);
+      window.dispatchEvent(new Event('cartUpdated')); 
+      
+      navigate('/profile');
     } catch (error) {
-      alert("Възникна грешка при изпращане на поръчката.");
+      alert('Грешка при изпращане на поръчката.');
     }
   };
 
+  if (cart.length === 0) {
+    return (
+      <div style={{ textAlign: 'center', padding: '100px 20px' }}>
+        <h1 style={{ fontSize: '3rem', color: '#a1a1a6' }}>Твоята количка е празна 🛒</h1>
+        <p style={{ marginBottom: '30px' }}>Изглежда още не си избрал нищо за своите растения.</p>
+        <button onClick={() => navigate('/products')} className="water-button">Към магазина</button>
+      </div>
+    );
+  }
+
   return (
-    <div className="profile-page" style={{ padding: '50px 20px', maxWidth: '900px', margin: '0 auto', minHeight: '80vh' }}>
-      <h1 style={{ color: '#00d2ff', textAlign: 'center', marginBottom: '40px' }}>🛒 Моята количка</h1>
-      
-      {cartItems.length === 0 ? (
-        <div style={{ textAlign: 'center' }}>
-          <p style={{ fontSize: '1.2rem', color: '#aaa' }}>Количката ви е празна.</p>
-          <Link to="/products"><button className="water-button" style={{ marginTop: '20px' }}>Към магазина</button></Link>
-        </div>
-      ) : (
-        <div className="cards-container" style={{ flexDirection: 'column', gap: '15px' }}>
-          {cartItems.map((item, i) => (
-            <div key={i} className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <img src={item.imageUrl} alt={item.name} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
-                <h3 style={{ margin: 0, fontSize: '1.2rem' }}>{item.name}</h3>
+    <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '50px 20px' }}>
+      <h1 className="gradient-text" style={{ fontSize: '3rem', marginBottom: '40px' }}>Твоята количка</h1>
+
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px' }}>
+        
+        {/* ЛЯВО: СПИСЪК С ПРОДУКТИ */}
+        <div style={{ flex: '1 1 600px' }}>
+          {cart.map((item, index) => (
+            <div key={index} className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '15px', padding: '15px' }}>
+              <img src={item.images?.[0] || item.imageUrl || '/product.jpg'} alt={item.name} style={{ width: '80px', height: '80px', borderRadius: '12px', objectFit: 'cover' }} />
+              <div style={{ flexGrow: 1 }}>
+                <h3 style={{ margin: 0 }}>{item.name}</h3>
+                <p style={{ color: '#00d2ff', fontWeight: 'bold', margin: '5px 0' }}>€{item.price}</p>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '30px' }}>
-                <h3 style={{ color: '#00ff88', margin: 0 }}>€{item.price}</h3>
-                <button onClick={() => handleRemove(i)} style={{ background: '#ff4d4d', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '8px', cursor: 'pointer' }}>✖</button>
-              </div>
+              <button onClick={() => removeFromCart(index)} style={{ background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer', fontSize: '1.2rem' }}>🗑️</button>
             </div>
           ))}
-          
-          <div className="card" style={{ marginTop: '20px', textAlign: 'right', borderTop: '4px solid gold' }}>
-            <h2>Общо: <span style={{ color: 'gold' }}>€{total.toFixed(2)}</span></h2>
-            
-            {!showCheckout ? (
-              <button className="water-button" onClick={() => setShowCheckout(true)} style={{ marginTop: '15px', background: 'gold', color: '#121212' }}>
-                💳 Продължи към плащане
+        </div>
+
+        {/* ДЯСНО: ДАННИ ЗА ДОСТАВКА И ПЛАЩАНЕ */}
+        <div style={{ flex: '1 1 350px' }}>
+          <div className="glass-card" style={{ position: 'sticky', top: '100px' }}>
+            <h3 style={{ marginTop: 0 }}>Обобщение</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
+              <span>Общо:</span>
+              <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#00ff88' }}>€{calculateTotal()}</span>
+            </div>
+
+            <form onSubmit={handleOrderSubmit} className="auth-form" style={{ background: 'transparent', padding: 0 }}>
+              <input type="text" placeholder="Име и фамилия" value={orderInfo.name} onChange={(e) => setOrderInfo({...orderInfo, name: e.target.value})} required style={{ background: '#111' }} />
+              <input type="text" placeholder="Адрес за доставка" value={orderInfo.address} onChange={(e) => setOrderInfo({...orderInfo, address: e.target.value})} required style={{ background: '#111' }} />
+              <input type="tel" placeholder="Телефон за връзка" value={orderInfo.phone} onChange={(e) => setOrderInfo({...orderInfo, phone: e.target.value})} required style={{ background: '#111' }} />
+              
+              <button type="submit" className="water-button" style={{ width: '100%', marginTop: '20px', padding: '15px' }}>
+                🚀 Завърши поръчката
               </button>
-            ) : (
-              <form onSubmit={handleOrderSubmit} className="auth-form" style={{ marginTop: '20px', textAlign: 'left' }}>
-                <h3 style={{ color: '#00d2ff', marginBottom: '15px' }}>📍 Данни за доставка</h3>
-                <input type="text" placeholder="Точен адрес за доставка" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} required />
-                <input type="tel" placeholder="Телефонен номер" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} required />
-                <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
-                  <button type="submit" className="water-button" style={{ background: '#00ff88', color: '#121212', flex: 1 }}>✅ Завърши поръчката</button>
-                  <button type="button" onClick={() => setShowCheckout(false)} className="water-button" style={{ background: '#333', flex: 1 }}>Отказ</button>
-                </div>
-              </form>
-            )}
+            </form>
+            <p style={{ fontSize: '0.8rem', color: '#888', marginTop: '15px', textAlign: 'center' }}>
+              Плащане при доставка (Наложен платеж)
+            </p>
           </div>
         </div>
-      )}
+
+      </div>
     </div>
   );
 }
