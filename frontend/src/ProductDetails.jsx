@@ -4,14 +4,15 @@ import axios from 'axios';
 import './App.css';
 
 function ProductDetails() {
-  const { id } = useParams(); // Взимаме ID-то от URL-а
+  const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   
-  // State за новото ревю
+  // State за галерията
+  const [mainImage, setMainImage] = useState('');
+  
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
-  
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
@@ -19,6 +20,9 @@ function ProductDetails() {
       try {
         const res = await axios.get(`https://aquasense-backend-hg8e.onrender.com/api/products/${id}`);
         setProduct(res.data);
+        // Задаваме първата снимка за главна
+        const allImgs = res.data.images?.length > 0 ? res.data.images : [res.data.imageUrl];
+        setMainImage(allImgs[0]);
       } catch (error) { console.error(error); }
     };
     fetchProduct();
@@ -28,8 +32,9 @@ function ProductDetails() {
     const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
     currentCart.push(product);
     localStorage.setItem('cart', JSON.stringify(currentCart));
-    alert(`🛒 "${product.name}" беше добавен в количката!`);
-    navigate('/cart');
+    
+    // Изпращаме сигнал до Navbar да се обнови и анимира!
+    window.dispatchEvent(new Event('cartUpdated'));
   };
 
   const handleReviewSubmit = async (e) => {
@@ -45,7 +50,6 @@ function ProductDetails() {
       const res = await axios.post(`https://aquasense-backend-hg8e.onrender.com/api/products/${id}/reviews`, newReview);
       setProduct(res.data); // Обновяваме продукта с новото ревю
       setComment('');
-      alert("Благодарим ви за ревюто!");
     } catch (error) {
       alert("Грешка при изпращане на ревюто.");
     }
@@ -53,18 +57,37 @@ function ProductDetails() {
 
   if (!product) return <h2 style={{ textAlign: 'center', marginTop: '100px' }}>Зареждане...</h2>;
 
+  // Събираме всички снимки за галерията (новите + старата за съвместимост)
+  const galleryImages = product.images?.length > 0 ? product.images : [product.imageUrl];
+
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '50px 20px' }}>
       
       {/* ГОРНА ЧАСТ: Снимка и Детайли */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '50px', alignItems: 'center', marginBottom: '80px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '50px', alignItems: 'flex-start', marginBottom: '80px' }}>
         
-        {/* Голяма снимка (Ляво) */}
+        {/* ЛЯВО: ГАЛЕРИЯ */}
         <div style={{ flex: '1 1 500px' }}>
-          <img src={product.imageUrl} alt={product.name} style={{ width: '100%', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }} />
+          {/* Главна снимка */}
+          <img src={mainImage} alt={product.name} style={{ width: '100%', height: '500px', objectFit: 'cover', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', marginBottom: '20px', transition: 'all 0.3s' }} />
+          
+          {/* Миниатюри */}
+          {galleryImages.length > 1 && (
+            <div style={{ display: 'flex', gap: '15px', overflowX: 'auto', paddingBottom: '10px' }}>
+              {galleryImages.map((img, idx) => (
+                <img 
+                  key={idx} 
+                  src={img} 
+                  onClick={() => setMainImage(img)}
+                  className={`thumbnail ${mainImage === img ? 'active' : ''}`}
+                  alt={`thumbnail-${idx}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
         
-        {/* Информация и Купи (Дясно) */}
+        {/* ДЯСНО: Детайли */}
         <div style={{ flex: '1 1 400px' }}>
           <h1 className="gradient-text" style={{ fontSize: '3.5rem', marginBottom: '10px' }}>{product.name}</h1>
           <h2 style={{ color: '#00d2ff', fontSize: '2.5rem', marginBottom: '20px' }}>€{product.price}</h2>
@@ -78,7 +101,7 @@ function ProductDetails() {
             <p style={{ margin: 0 }}>🛡️ 2 години международна гаранция</p>
           </div>
 
-          <button onClick={handleBuy} className="water-button" style={{ width: '100%', fontSize: '1.2rem', padding: '15px' }}>
+          <button onClick={handleBuy} className="water-button" style={{ width: '100%', fontSize: '1.2rem', padding: '15px', background: '#00d2ff', color: '#121212', boxShadow: '0 10px 20px rgba(0,210,255,0.3)' }}>
             🛍️ Добави в количката
           </button>
         </div>

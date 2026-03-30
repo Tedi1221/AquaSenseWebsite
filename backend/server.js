@@ -32,7 +32,8 @@ const productSchema = new mongoose.Schema({
   name: String,
   price: Number,
   description: String,
-  imageUrl: String,
+  imageUrl: String, // Пазим го заради старите продукти
+  images: { type: Array, default: [] }, // НОВО: Масив за много снимки (Base64 или линкове)
   reviews: [{
     userName: String,
     rating: Number,
@@ -40,7 +41,6 @@ const productSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now }
   }]
 });
-const Product = mongoose.model('Product', productSchema);
 
 
 // 2. ПЪТИЩА ЗА СЕНЗОРА И ПРОДУКТИТЕ

@@ -7,7 +7,8 @@ function AdminPanel() {
   const [activeTab, setActiveTab] = useState('products'); // 'products', 'orders', 'tickets'
   
   const [products, setProducts] = useState([]);
-  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', imageUrl: '/product.jpg' });
+  // ВАЖНО: Тук добавихме images: []
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', imageUrl: '/product.jpg', images: [] });
   const [editingId, setEditingId] = useState(null);
   
   const [orders, setOrders] = useState([]);
@@ -39,15 +40,23 @@ function AdminPanel() {
   const handleProductSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (editingId) await axios.put(`https://aquasense-backend-hg8e.onrender.com/api/products/${editingId}`, newProduct);
-      else await axios.post('https://aquasense-backend-hg8e.onrender.com/api/products', newProduct);
+      if (editingId) {
+        await axios.put(`https://aquasense-backend-hg8e.onrender.com/api/products/${editingId}`, newProduct);
+      } else {
+        await axios.post('https://aquasense-backend-hg8e.onrender.com/api/products', newProduct);
+      }
       setEditingId(null);
-      setNewProduct({ name: '', price: '', description: '', imageUrl: '/product.jpg' });
+      setNewProduct({ name: '', price: '', description: '', imageUrl: '/product.jpg', images: [] });
       fetchData();
+      alert('Запазено успешно!');
     } catch (error) { alert('Грешка при запис.'); }
   };
+
   const handleDeleteProduct = async (id) => {
-    if (window.confirm("Изтриване?")) { await axios.delete(`https://aquasense-backend-hg8e.onrender.com/api/products/${id}`); fetchData(); }
+    if (window.confirm("Изтриване?")) { 
+      await axios.delete(`https://aquasense-backend-hg8e.onrender.com/api/products/${id}`); 
+      fetchData(); 
+    }
   };
 
   // ПОРЪЧКИ
@@ -84,17 +93,49 @@ function AdminPanel() {
         {/* ТАБ: ПРОДУКТИ */}
         {activeTab === 'products' && (
           <div style={{ width: '100%' }}>
-            {/* Тук кодът е идентичен с предишния за продуктите, просто стилизиран като glass-card */}
+            
+            {/* Формата за добавяне/редакция */}
             <div className="glass-card" style={{ width: '100%', marginBottom: '20px' }}>
               <h3>{editingId ? '✏️ Редактирай' : '➕ Добави продукт'}</h3>
               <form onSubmit={handleProductSubmit} className="auth-form">
                 <input type="text" placeholder="Име" value={newProduct.name} onChange={(e) => setNewProduct({...newProduct, name: e.target.value})} required style={{background:'#111'}}/>
                 <input type="number" placeholder="Цена (€)" value={newProduct.price} onChange={(e) => setNewProduct({...newProduct, price: e.target.value})} required style={{background:'#111'}}/>
-                <input type="text" placeholder="Описание" value={newProduct.description} onChange={(e) => setNewProduct({...newProduct, description: e.target.value})} required style={{background:'#111'}}/>
-                <input type="text" placeholder="Снимка (/product.jpg)" value={newProduct.imageUrl} onChange={(e) => setNewProduct({...newProduct, imageUrl: e.target.value})} required style={{background:'#111'}}/>
-                <button type="submit" className="water-button" style={{ background: '#00d2ff', color: '#121212', marginTop: '10px' }}>Запази</button>
+                <textarea placeholder="Описание" value={newProduct.description} onChange={(e) => setNewProduct({...newProduct, description: e.target.value})} required style={{background:'#111', width: '100%', padding: '10px', borderRadius: '8px', border: 'none', color: 'white', minHeight: '60px', fontFamily: 'inherit'}}/>
+                
+                {/* КАЧВАНЕ НА СНИМКИ */}
+                <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', marginTop: '10px' }}>
+                  <label style={{ display: 'block', marginBottom: '10px', color: '#00d2ff' }}>📷 Качи снимки от компютъра:</label>
+                  <input type="file" accept="image/*" multiple onChange={(e) => {
+                    const files = Array.from(e.target.files);
+                    files.forEach(file => {
+                      if (file.size > 2 * 1024 * 1024) return alert('Файлът е твърде голям! Изберете снимка под 2MB.');
+                      const reader = new FileReader();
+                      reader.readAsDataURL(file);
+                      reader.onloadend = () => {
+                        setNewProduct(prev => ({ ...prev, images: [...(prev.images || []), reader.result] }));
+                      };
+                    });
+                  }} style={{ color: 'white' }} />
+                  
+                  {/* Показваме миниатюри на качените снимки */}
+                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '10px' }}>
+                    {newProduct.images && newProduct.images.map((img, idx) => (
+                      <div key={idx} style={{ position: 'relative' }}>
+                        <img src={img} alt="preview" style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '8px' }} />
+                        <button type="button" onClick={() => {
+                          const newImages = newProduct.images.filter((_, i) => i !== idx);
+                          setNewProduct({...newProduct, images: newImages});
+                        }} style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '10px' }}>X</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button type="submit" className="water-button" style={{ background: '#00d2ff', color: '#121212', marginTop: '15px', width: '100%' }}>Запази продукта</button>
               </form>
             </div>
+
+            {/* СПИСЪК С ПРОДУКТИ (Беше изчезнал) */}
             <div className="glass-card" style={{ width: '100%' }}>
               <h3>📦 Налични продукти</h3>
               <ul style={{ listStyle: 'none', padding: 0 }}>
@@ -109,6 +150,7 @@ function AdminPanel() {
                 ))}
               </ul>
             </div>
+
           </div>
         )}
 
