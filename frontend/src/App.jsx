@@ -9,9 +9,9 @@ import Products from './Products';
 import Cart from './Cart';
 import ProductDetails from './ProductDetails';
 
-// 🚀 ВРЪЩАМЕ ЛИПСВАЩИТЕ ИМПОРТИ:
+// 🚀 ТОЧНИТЕ ИМЕНА НА ФАЙЛОВЕТЕ:
 import About from './About'; 
-import Demo from './Demo'; // (Ако файлът ти за демото се казва по друг начин, промени името тук)
+import LiveDemo from './LiveDemo'; 
 
 import './App.css';
 
@@ -29,10 +29,9 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         
-        {/* 🚀 ЕТО ГИ ЛИПСВАЩИТЕ МАРШРУТИ: */}
+        {/* 🚀 МАРШРУТИТЕ ЗА ЗА НАС И ДЕМОТО: */}
         <Route path="/about" element={<About />} />
-        <Route path="/demo" element={<Demo />} />
-        
+        <Route path="/demo" element={<LiveDemo />} />
       </Routes>
     </Router>
   );
