@@ -7,7 +7,12 @@ import AdminPanel from './AdminPanel';
 import Profile from './Profile';
 import Products from './Products';
 import Cart from './Cart';
-import ProductDetails from './ProductDetails'; // Ето го правилно импортиран!
+import ProductDetails from './ProductDetails';
+
+// 🚀 ВРЪЩАМЕ ЛИПСВАЩИТЕ ИМПОРТИ:
+import About from './About'; 
+import Demo from './Demo'; // (Ако файлът ти за демото се казва по друг начин, промени името тук)
+
 import './App.css';
 
 function App() {
@@ -22,8 +27,12 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/products" element={<Products />} />
         <Route path="/cart" element={<Cart />} />
-        {/* Ето го новият път за индивидуалния продукт */}
         <Route path="/product/:id" element={<ProductDetails />} />
+        
+        {/* 🚀 ЕТО ГИ ЛИПСВАЩИТЕ МАРШРУТИ: */}
+        <Route path="/about" element={<About />} />
+        <Route path="/demo" element={<Demo />} />
+        
       </Routes>
     </Router>
   );
