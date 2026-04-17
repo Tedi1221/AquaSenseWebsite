@@ -618,3 +618,124 @@ body.light-mode .review-card span {
 }
 .thumbnail:hover { transform: translateY(-3px); }
 .thumbnail.active { border-color: #00d2ff; }
+
+/* ========================================= */
+/* 🌿 LIVE DEMO АНИМАЦИИ                     */
+/* ========================================= */
+
+.demo-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: center;
+}
+
+.virtual-pot {
+  width: 100%;
+  height: 400px;
+  background: linear-gradient(to bottom, #87CEEB, #e0f6ff);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+  transition: background 0.5s ease;
+}
+
+/* Слънцето */
+.demo-sun {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 60px;
+  transition: all 0.5s ease;
+}
+
+/* Почвата */
+.demo-soil {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 30%;
+  transition: background-color 0.8s ease;
+  border-top: 4px solid rgba(0,0,0,0.1);
+}
+
+/* Цветето */
+.demo-plant {
+  position: absolute;
+  bottom: 25%;
+  left: 50%;
+  transform-origin: bottom center;
+  font-size: 120px;
+  margin-left: -60px; /* Центриране */
+  transition: all 1.5s ease-in-out;
+  z-index: 2;
+}
+
+/* Състояния на цветето */
+.plant-thriving {
+  transform: scale(1.1) rotate(0deg);
+  filter: brightness(1.1);
+}
+.plant-normal {
+  transform: scale(1) rotate(0deg);
+}
+.plant-wilted {
+  transform: scale(0.85) rotate(35deg); /* Накланя се като увехнало */
+  filter: grayscale(60%) sepia(60%) hue-rotate(-30deg); /* Пожълтява и потъмнява */
+}
+
+/* Aqua-Sense Устройството */
+.demo-device {
+  position: absolute;
+  bottom: 25%;
+  left: 20%;
+  width: 40px;
+  height: 100px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 10px;
+  z-index: 3;
+}
+
+/* Синята лампичка на устройството */
+.device-led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #333;
+  transition: all 0.3s ease;
+}
+.device-led.active {
+  background: #00d2ff;
+  box-shadow: 0 0 10px #00d2ff;
+}
+
+/* Капещата вода */
+.water-drop {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  margin-left: -10px;
+  font-size: 20px;
+  opacity: 0;
+}
+.water-drop.flowing {
+  animation: drip 1s infinite;
+}
+
+@keyframes drip {
+  0% { top: 40px; opacity: 1; transform: scale(1); }
+  100% { top: 150px; opacity: 0; transform: scale(0.5); }
+}
+
+/* Стил за слайдерите */
+.demo-slider {
+  width: 100%;
+  margin: 15px 0;
+  accent-color: #00d2ff;
+}

@@ -2,72 +2,135 @@ import { useState, useEffect } from 'react';
 import './App.css';
 
 function LiveDemo() {
-  const [moisture, setMoisture] = useState(600);
-  const [light, setLight] = useState(400); // Базова нормална светлина
-  const [pumpStatus, setPumpStatus] = useState('STANDBY 🛑');
-  const [message, setMessage] = useState('');
+  const [moisture, setMoisture] = useState(60);
+  const [light, setLight] = useState(80);
+  const [isWatering, setIsWatering] = useState(false);
 
-  // Интелигентната логика за поливане
+  // Логика за автоматично поливане (Aqua-Sense)
   useEffect(() => {
-    if (light > 850) {
-      setPumpStatus('STANDBY 🛑');
-      setMessage('⚠️ Силна слънчева светлина! Поливането е спряно принудително, за да не изгорят листата на растението (ефект на лупата).');
-    } else if (moisture < 300) {
-      setPumpStatus('WATERING 💦');
-      setMessage('💧 Растението е жадно! Системата автоматично стартира помпата.');
-    } else {
-      setPumpStatus('STANDBY 🛑');
-      setMessage('✅ Почвата е достатъчно влажна. Системата пести вода и енергия.');
+    // Ако влажността падне под 30% и в момента не се полива
+    if (moisture < 30 && !isWatering) {
+      setIsWatering(true); // Включваме устройството
+      
+      // Симулираме процеса на поливане, който отнема 3 секунди
+      setTimeout(() => {
+        setMoisture(80); // Връщаме влажността на оптимално ниво
+        setIsWatering(false); // Спираме устройството
+      }, 3000);
     }
-  }, [moisture, light]);
+  }, [moisture, isWatering]);
+
+  // Определяне на състоянието на цветето
+  let plantClass = 'plant-normal';
+  if (moisture > 70) plantClass = 'plant-thriving';
+  else if (moisture < 30) plantClass = 'plant-wilted';
+
+  // Динамични цветове
+  // Почвата става от тъмно кафява (мокра) към светло пясъчна (суха)
+  const soilColor = `hsl(30, 40%, ${100 - (moisture / 1.5)}%)`; 
+  // Небето става по-тъмно, когато няма светлина
+  const skyColor = `linear-gradient(to bottom, hsl(200, ${light}%, ${light/2}%), #e0f6ff)`;
 
   return (
-    <div className="profile-page" style={{ textAlign: 'center', maxWidth: '1000px', margin: '0 auto' }}>
-      <h1 style={{ color: '#00ff88' }}>🎮 Интерактивен Симулатор</h1>
-      <p style={{ color: '#aaa', marginBottom: '40px' }}>Променете условията на средата, за да видите как интелигентно реагира Aqua-Sense Pro.</p>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '50px 20px', minHeight: '80vh' }}>
+      <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+        <h1 className="gradient-text" style={{ fontSize: '3.5rem', marginBottom: '10px' }}>Изпробвай магията</h1>
+        <p style={{ fontSize: '1.2rem', color: '#a1a1a6' }}>
+          Намали влажността, за да видиш как Aqua-Sense Pro реагира и спасява растението автономно.
+        </p>
+      </div>
 
-      <div className="cards-container" style={{ alignItems: 'stretch' }}>
+      <div className="demo-container">
         
-        {/* Панел за контрол */}
-        <div className="card" style={{ flex: 1, minWidth: '300px' }}>
-          <h3>🎛️ Контролен панел</h3>
-          
-          <div style={{ marginTop: '30px', textAlign: 'left' }}>
-            <label style={{ color: '#00d2ff', fontWeight: 'bold' }}>Влажност на почвата: {moisture}</label>
-            <input 
-              type="range" min="0" max="1000" value={moisture} 
-              onChange={(e) => setMoisture(e.target.value)} 
-              style={{ width: '100%', cursor: 'pointer', marginTop: '10px' }} 
-            />
-            <p style={{ fontSize: '0.8rem', color: '#666' }}>⬅️ Сухо | Мокро ➡️</p>
-          </div>
+        {/* ЛЯВО: Визуалната симулация */}
+        <div style={{ flex: '1 1 500px' }}>
+          <div className="virtual-pot" style={{ background: skyColor }}>
+            
+            {/* Слънце */}
+            <div className="demo-sun" style={{ opacity: light / 100, transform: `scale(${light / 50})` }}>☀️</div>
+            
+            {/* Устройство Aqua-Sense */}
+            <div className="demo-device">
+              <div className={`device-led ${isWatering ? 'active' : ''}`}></div>
+              <div className={`water-drop ${isWatering ? 'flowing' : ''}`}>💧</div>
+            </div>
 
-          <div style={{ marginTop: '30px', textAlign: 'left' }}>
-            <label style={{ color: 'gold', fontWeight: 'bold' }}>Слънчева светлина: {light}</label>
-            <input 
-              type="range" min="0" max="1000" value={light} 
-              onChange={(e) => setLight(e.target.value)} 
-              style={{ width: '100%', cursor: 'pointer', marginTop: '10px' }} 
-            />
-            <p style={{ fontSize: '0.8rem', color: '#666' }}>⬅️ Тъмно | Силно слънце ➡️</p>
+            {/* Растение */}
+            <div className={`demo-plant ${plantClass}`}>
+              {moisture < 30 ? '🥀' : '🌿'}
+            </div>
+
+            {/* Почва */}
+            <div className="demo-soil" style={{ backgroundColor: soilColor }}>
+              <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', marginTop: '20px', fontWeight: 'bold' }}>
+                Влажност на почвата: {moisture}%
+              </div>
+            </div>
+
           </div>
         </div>
 
-        {/* Резултат от сензора */}
-        <div className="card" style={{ flex: 1, minWidth: '300px', borderTop: pumpStatus.includes('WATERING') ? '4px solid #00d2ff' : (light > 850 ? '4px solid #ff4d4d' : '4px solid #333') }}>
-          <h3>🤖 Реакция на системата</h3>
-          
-          <div style={{ margin: '30px 0' }}>
-            <h1 style={{ fontSize: '2.5rem', color: pumpStatus.includes('WATERING') ? '#00d2ff' : (light > 850 ? '#ff4d4d' : '#aaa'), transition: 'color 0.3s' }}>
-              {pumpStatus}
-            </h1>
+        {/* ДЯСНО: Контролен панел */}
+        <div style={{ flex: '1 1 400px' }}>
+          <div className="glass-card" style={{ padding: '40px' }}>
+            <h3 style={{ fontSize: '1.8rem', marginTop: 0 }}>Контролен панел</h3>
+            
+            <div style={{ marginBottom: '30px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <span>💧 Влажност на почвата</span>
+                <span style={{ color: moisture < 30 ? '#ff4d4d' : '#00d2ff', fontWeight: 'bold' }}>{moisture}%</span>
+              </div>
+              <input 
+                type="range" 
+                min="0" max="100" 
+                value={moisture} 
+                onChange={(e) => setMoisture(Number(e.target.value))} 
+                className="demo-slider"
+                disabled={isWatering} // Блокираме слайдера, докато устройството полива
+              />
+              <p style={{ fontSize: '0.85rem', color: '#888', margin: 0 }}>
+                {isWatering 
+                  ? "⚠️ Aqua-Sense полива растението в момента..." 
+                  : "Плъзнете наляво (под 30%), за да симулирате засушаване."}
+              </p>
+            </div>
+
+            <div style={{ marginBottom: '30px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <span>☀️ Слънчева светлина</span>
+                <span style={{ color: 'gold', fontWeight: 'bold' }}>{light}%</span>
+              </div>
+              <input 
+                type="range" 
+                min="0" max="100" 
+                value={light} 
+                onChange={(e) => setLight(Number(e.target.value))} 
+                className="demo-slider"
+              />
+            </div>
+
+            {/* Индикатор за статус */}
+            <div style={{ 
+              marginTop: '40px', 
+              padding: '20px', 
+              borderRadius: '16px', 
+              background: isWatering ? 'rgba(0, 210, 255, 0.1)' : 'rgba(255,255,255,0.05)',
+              border: `1px solid ${isWatering ? '#00d2ff' : 'rgba(255,255,255,0.1)'}`,
+              transition: 'all 0.3s'
+            }}>
+              <h4 style={{ margin: '0 0 10px 0', color: isWatering ? '#00d2ff' : 'white' }}>
+                Статус на Aqua-Sense:
+              </h4>
+              <p style={{ margin: 0, color: '#a1a1a6' }}>
+                {isWatering 
+                  ? "Отчетена е критична сухота. Микро-помпата е активирана. Доставяне на вода..." 
+                  : "Сензорите работят нормално. Растението е в оптимална среда."}
+              </p>
+            </div>
+
           </div>
-          
-          <p style={{ color: light > 850 ? '#ff4d4d' : '#ccc', fontSize: '1.2rem', lineHeight: '1.5' }}>
-            {message}
-          </p>
         </div>
-        
+
       </div>
     </div>
   );
