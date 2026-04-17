@@ -14,7 +14,7 @@ const resources = {
       // Landing Page
       "hero_title": "The future of your plants is here.",
       "hero_subtitle": "Aqua-Sense Pro monitors, analyzes, and waters automatically. You just enjoy.",
-      "buy_now": "Buy now - 30€",
+      "buy_now": "Buy now",
       "see_demo": "See Live Demo",
       "video_title": "See Aqua-Sense in action",
       "box_title": "What's in the box?",
@@ -41,7 +41,7 @@ const resources = {
       // Landing Page
       "hero_title": "Бъдещето на вашите растения е тук.",
       "hero_subtitle": "Aqua-Sense Pro следи, анализира и полива автоматично. Вие просто се наслаждавате.",
-      "buy_now": "Купи сега - 30€",
+      "buy_now": "Купи сега",
       "see_demo": "Виж Live Demo",
       "video_title": "Вижте Aqua-Sense в действие",
       "box_title": "Какво получавате в комплекта?",
