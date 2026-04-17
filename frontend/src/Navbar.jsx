@@ -9,20 +9,19 @@ function Navbar() {
   const user = JSON.parse(localStorage.getItem('user'));
   
   const [isLightMode, setIsLightMode] = useState(false);
-  const [cartCount, setCartCount] = useState(0); // State за бройката в количката
-  const [animating, setAnimating] = useState(false); // State за анимацията
+  const [cartCount, setCartCount] = useState(0); 
+  const [animating, setAnimating] = useState(false); 
 
-  // Функция за прочитане на количката
   const updateCart = () => {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     setCartCount(cart.length);
     setAnimating(true);
-    setTimeout(() => setAnimating(false), 300); // Спира анимацията след 0.3 сек
+    setTimeout(() => setAnimating(false), 300); 
   };
 
   useEffect(() => {
-    updateCart(); // Зареждаме бройката при стартиране
-    window.addEventListener('cartUpdated', updateCart); // Слушаме за промени!
+    updateCart(); 
+    window.addEventListener('cartUpdated', updateCart); 
     
     if (localStorage.getItem('theme') === 'light') {
       setIsLightMode(true);
@@ -46,7 +45,6 @@ function Navbar() {
         <Link to="/">{t('nav_home')}</Link>
         <Link to="/products">{t('nav_products')}</Link>
         <Link to="/about">{t('nav_about')}</Link>
-        <Link to="/demo" className="nav-demo-btn">Live Demo</Link>
         
         {/* ИКОНАТА НА КОЛИЧКАТА С БАДЖ И АНИМАЦИЯ */}
         <Link to="/cart" style={{ fontSize: '1.5rem', textDecoration: 'none', position: 'relative' }}>
@@ -59,7 +57,7 @@ function Navbar() {
 
         {user ? (
           <>
-            {user.role === 'admin' && <Link to="/admin" style={{ color: 'gold', fontWeight: 'bold' }}>👑 {t('nav_admin')}</Link>}
+            {user.role === 'admin' && <Link to="/admin" style={{ color: 'gold', fontWeight: 'bold' }}>Админ</Link>}
             <Link to="/profile" style={{ color: '#00ff88', fontWeight: 'bold' }}>👤 {user.name}</Link>
             <button onClick={handleLogout} className="nav-logout-btn">{t('nav_logout')}</button>
           </>
