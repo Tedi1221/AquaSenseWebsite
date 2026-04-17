@@ -32,11 +32,17 @@ function Products() {
       <h1 className="gradient-text" style={{ fontSize: '3rem', marginBottom: '50px' }}>{t('nav_products')}</h1>
       
       {/* 🚀 ОПРАВЕНАТА МРЕЖА: Точно по 3 на ред за десктоп */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', justifyContent: 'center', gap: '40px' }}>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(3, 1fr)', /* ТУК Е МАГИЯТА ЗА 3 НА РЕД */
+        gap: '40px',
+        justifyContent: 'center',
+        alignItems: 'stretch' /* Прави всички карти еднакво високи */
+      }}>
         {products.length === 0 ? <p style={{ gridColumn: '1 / -1' }}>В момента няма налични продукти.</p> : null}
         
         {products.map(product => (
-          <div key={product._id} className="glass-card" style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', padding: '20px', boxSizing: 'border-box' }}>
+          <div key={product._id} className="glass-card" style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', padding: '20px', boxSizing: 'border-box', width: '100%' }}>
             <Link to={`/product/${product._id}`}>
               {/* Показва първата снимка от масива, ако има такава */}
               <img 
@@ -51,8 +57,6 @@ function Products() {
             {/* Името е с фиксирана минимална височина, за да не се разместват картите */}
             <h3 style={{ fontSize: '1.4rem', margin: '0 0 15px 0', minHeight: '55px' }}>{product.name}</h3>
             
-            {/* 🚀 ОПИСАНИЕТО БЕШЕ ИЗТРИТО ОТ ТУК! */}
-            
             {/* marginTop: 'auto' бута цената и бутоните винаги най-отдолу! */}
             <h2 style={{ color: '#00d2ff', margin: '0 0 20px 0', marginTop: 'auto' }}>€{product.price}</h2>
             
@@ -65,6 +69,15 @@ function Products() {
           </div>
         ))}
       </div>
+
+      {/* 📱 ЗАЩИТА ЗА ТЕЛЕФОНИ: Ако екранът е малък, продуктите минават по 1 на ред */}
+      <style>{`
+        @media (max-width: 900px) {
+          div[style*="grid-template-columns: repeat(3, 1fr)"] {
+             grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
