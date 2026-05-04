@@ -1,741 +1,511 @@
 /* src/App.css */
 #root {
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-  width: 100%;
-  overflow-x: hidden;
-}
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #121212;
-  color: #ffffff;
-}
-
-.dashboard {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 30px 20px;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.header h1 {
-  color: #00d2ff;
-  font-size: 2.5rem;
-  margin-bottom: 5px;
-}
-
-.header p {
-  color: #aaaaaa;
-  font-size: 1.2rem;
-}
-
-.cards-container {
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 40px;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.card {
-  background-color: #1e1e1e;
-  padding: 20px;
-  border-radius: 16px;
-  flex: 1;
-  text-align: center;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-  border-top: 4px solid #00d2ff;
-}
-
-.card h3 {
-  margin-top: 0;
-  color: #cccccc;
-  font-size: 1.1rem;
-}
-
-.card .value {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin: 10px 0 0;
-}
-
-.value.active {
-  color: #00ff88;
-  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-}
-
-.chart-container {
-  background-color: #1e1e1e;
-  padding: 20px;
-  border-radius: 16px;
-  margin-bottom: 40px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-}
-
-.actions {
-  text-align: center;
-}
-
-.water-button {
-  background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-  color: white;
-  border: none;
-  padding: 15px 50px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.water-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 210, 255, 0.5);
-}
-
-.water-button:active {
-  transform: translateY(0);
-}
-
-/* --- НОВИ СТИЛОВЕ ЗА НАВИГАЦИЯТА И СТРАНИЦАТА --- */
+/* ========================================= */
+/* 🌌 NAVBAR                                 */
+/* ========================================= */
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 50px;
-  background-color: #1a1a1a;
-  border-bottom: 1px solid #333;
+  padding: 1rem 3rem;
+  background: rgba(5, 5, 5, 0.4);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
 }
 
-.nav-logo a {
-  color: #00d2ff;
+body.light-mode .navbar {
+  background: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.nav-logo {
+  font-family: var(--font-heading);
   font-size: 1.5rem;
-  font-weight: bold;
-  text-decoration: none;
+  font-weight: 800;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .nav-links {
   display: flex;
-  gap: 30px;
   align-items: center;
+  gap: 2rem;
+  font-weight: 500;
+  font-size: 1rem;
 }
 
 .nav-links a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.1rem;
-  transition: color 0.3s;
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .nav-links a:hover {
-  color: #00d2ff;
+  color: var(--text-primary);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background: var(--accent-gradient);
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
 }
 
 .nav-login-btn {
-  background-color: #333;
-  padding: 8px 20px;
-  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.6rem 1.5rem;
+  border-radius: 99px;
+  color: var(--text-primary) !important;
+  transition: all 0.3s ease !important;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
 }
 
-.hero-section {
-  text-align: center;
-  padding: 100px 20px;
+body.light-mode .nav-login-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.hero-section h1 { font-size: 3.5rem; color: #00d2ff; }
-.hero-section p { font-size: 1.3rem; color: #aaa; margin-bottom: 40px; }
-.hero-buttons { display: flex; justify-content: center; gap: 20px; }
-
-.video-section, .reviews-section {
-  padding: 60px 20px;
-  text-align: center;
-  background-color: #121212;
+.nav-login-btn:hover {
+  background: rgba(0, 240, 255, 0.1);
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
 }
 
-.video-section h2, .reviews-section h2 {
-  color: #00d2ff;
-  margin-bottom: 40px;
-  font-size: 2.5rem;
-}
-
-.mock-video {
-  width: 80%;
-  max-width: 800px;
-  height: 400px;
-  margin: 0 auto;
-  background-color: #1e1e1e;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px dashed #333;
-  color: #666;
-}
-
-.reviews-container {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
-}
-
-.review-card {
-  background-color: #1e1e1e;
-  padding: 30px;
-  border-radius: 16px;
-  max-width: 300px;
-  text-align: left;
-  border-left: 4px solid #00ff88;
-}
-
-.review-card span {
-  display: block;
-  margin-top: 15px;
-  color: #00d2ff;
-  font-weight: bold;
-}
-
-/* --- СТИЛОВЕ ЗА ВХОД И РЕГИСТРАЦИЯ --- */
-.login-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-}
-
-.login-container {
-  background-color: #1e1e1e;
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-  width: 100%;
-  max-width: 400px;
-  border-top: 4px solid #00d2ff;
-}
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.auth-form input {
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #333;
-  background-color: #2a2a2a;
-  color: white;
-  font-size: 1rem;
-}
-
-.alert-message {
-  color: #ff4d4d;
-  background-color: rgba(255, 77, 77, 0.1);
-  padding: 10px;
-  border-radius: 5px;
-  text-align: center;
-}
-
-/* --- СТИЛОВЕ ЗА НОВАТА LANDING PAGE И ПРОФИЛА --- */
-
-/* Навигация бутон изход */
 .nav-logout-btn {
-  background-color: #ff4d4d;
-  color: white;
-  padding: 8px 20px;
-  border-radius: 20px;
-  border: none;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 0.6rem 1.5rem;
+  border-radius: 99px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
 }
 
 .nav-logout-btn:hover {
-  background-color: #ff3333;
+  background: rgba(239, 68, 68, 0.2);
+  transform: translateY(-2px);
 }
 
-/* Профил страница */
-.profile-page {
-  padding: 50px 20px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.profile-header {
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.logout-button-big {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 15px 40px;
-  font-size: 1.2rem;
-  border-radius: 30px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: transform 0.2s;
-}
-
-.logout-button-big:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
-}
-
-/* Landing Page Снимки и Видео */
-.hero-image-container {
-  margin-top: 50px;
-}
-
-.hero-image {
-  max-width: 100%;
-  width: 600px;
-  border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(0, 210, 255, 0.2);
-}
-
-.video-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-}
-
-.promo-video {
-  width: 100%;
-  max-width: 900px;
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-  border: 2px solid #333;
-}
-
-/* Секция Кутия */
-.box-section {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 80px 20px;
-  background-color: #1a1a1a;
-  flex-wrap: wrap;
-  gap: 40px;
-}
-
-.box-content {
-  max-width: 400px;
-}
-
-.box-features {
-  list-style: none;
-  padding: 0;
-  font-size: 1.2rem;
-  line-height: 2;
-  color: #ccc;
-}
-
-.box-image {
-  max-width: 100%;
-  width: 500px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-/* --- РЕСПОНСИВ ДИЗАЙН (ЗА ТЕЛЕФОНИ) --- */
-@media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    padding: 15px;
-    gap: 15px;
-  }
-  
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .cards-container, .box-section, .hero-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .hero-section h1 {
-    font-size: 2.2rem;
-  }
-
-  .promo-video {
-    width: 100%;
-  }
-
-  .card {
-    width: 100% !important;
-    max-width: 100%;
-  }
-
-  /* Продуктите да се събират на един ред на телефон */
-  .products-grid {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-/* ========================================= */
-/* 🍏 APPLE-STYLE CORPORATE DESIGN (PHASE 2) */
-/* ========================================= */
-
-/* Градиентен текст (като заглавията на iPhone) */
-/* Градиентен текст (като заглавията на iPhone) */
-.gradient-text {
-  background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  
-  /* ФИКС ЗА ИЗРЯЗАНИТЕ БУКВИ */
-  line-height: 1.3;
-  padding-bottom: 10px;
-  display: inline-block;
-}
-/* Glassmorphism (Стъклен ефект за картите) */
-.glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 24px;
-  padding: 40px 30px;
-  transition: transform 0.3s ease, background 0.3s ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  text-align: left;
-}
-
-.glass-card:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* По-чисти и заоблени бутони (Apple style) */
-.water-button {
-  border-radius: 999px; /* Прави ги напълно заоблени хапчета */
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(0, 210, 255, 0.2);
-}
-
-/* Премахване на гадните рамки в браузъра (Full-width fix) */
-#root {
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow-x: hidden;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  background-color: #000000; /* Истинско черно като при Apple OLED екраните */
-  color: #f5f5f7; /* Специфичното Apple бяло-сиво */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
-/* ========================================= */
-/* 🌗 LIGHT MODE (СВЕТЛА ТЕМА) - ФАЗА 3      */
-/* ========================================= */
-
-body.light-mode {
-  background-color: #f5f5f7; /* Apple светло сиво/бяло */
-  color: #1d1d1f; /* Тъмно сив текст */
-}
-
-/* Навигация в светъл режим */
-body.light-mode .navbar {
-  background-color: rgba(255, 255, 255, 0.8);
-  border-bottom: 1px solid #d2d2d7;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-body.light-mode .nav-links a {
-  color: #1d1d1f;
-}
-
-/* Прозрачните "стъклени" карти стават бели */
-body.light-mode .card,
-body.light-mode .glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-}
-
-body.light-mode h1, 
-body.light-mode h2, 
-body.light-mode h3, 
-body.light-mode p {
-  color: #1d1d1f !important;
-}
-
-/* Форми и инпути в светъл режим */
-body.light-mode input, 
-body.light-mode textarea {
-  background-color: #ffffff !important;
-  color: #1d1d1f !important;
-  border: 1px solid #d2d2d7 !important;
-}
-
-body.light-mode .gradient-text {
-  background: linear-gradient(135deg, #007aff 0%, #34a853 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ========================================= */
-/* 🛠️ ФИКСОВЕ ЗА СВЕТЛАТА ТЕМА НА НАЧАЛНАТА  */
-/* ========================================= */
-
-/* Оправяме бутона "Вход / Регистрация" */
-body.light-mode .nav-login-btn {
-  background-color: #1d1d1f; /* Тъмно сиво на Apple */
-  color: #ffffff !important; /* Бял текст, за да се чете */
-}
-
-body.light-mode .nav-login-btn:hover {
-  background-color: #333336;
-}
-
-/* Оправяме фона на секцията "Какво има в кутията" */
-body.light-mode .box-section {
-  background-color: #e8e8ed; /* Приятно светло сиво, за да се отличава */
-}
-
-body.light-mode .box-features li,
-body.light-mode .box-features {
-  color: #1d1d1f; /* Тъмен текст за списъка */
-}
-
-/* Оправяме картите с ревютата */
-body.light-mode .review-card {
-  background-color: #ffffff;
-  color: #1d1d1f;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-  border: 1px solid #d2d2d7;
-}
-
-body.light-mode .review-card p,
-body.light-mode .review-card span {
-  color: #555555 !important;
-}
-
-/* Ако видео секцията има остатъчен тъмен фон */
-body.light-mode .video-section {
-  background-color: transparent;
-}
-
-/* ========================================= */
-/* 🛠️ ПЪЛЕН ФИКС ЗА СЕКЦИЯТА С РЕВЮТАТА (LIGHT MODE) */
-/* ========================================= */
-
-/* 1. Правим фона на самата секция светъл/транспарентен */
-body.light-mode .reviews-section {
-  background-color: transparent !important; /* Да се слее с белия body */
-  padding-top: 50px;
-  padding-bottom: 50px;
-}
-
-/* 2. Правим основното заглавие (h2) тъмно */
-body.light-mode .reviews-section h2 {
-  color: #1d1d1f !important;
-  margin-bottom: 40px;
-}
-
-/* 3. Оправяме картите с ревютата (потвърждаваме, че са бели) */
-body.light-mode .review-card {
-  background-color: #ffffff;
-  color: #1d1d1f;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Малко по-силно, за да изпъкнат на бяло */
-  border: 1px solid #d2d2d7;
-  transition: transform 0.3s ease;
-}
-
-body.light-mode .review-card:hover {
-  transform: translateY(-5px); /* Ефект на ховър за Apple стил */
-}
-
-/* 4. Оправяме текста и автора в картите */
-body.light-mode .review-card p {
-  color: #555555 !important; /* По-мек тъмен текст */
-}
-
-body.light-mode .review-card span {
-  color: #888888 !important; /* По-светъл тъмен текст за автора */
-}
-
-/* ========================================= */
-/* 🛒 КОЛИЧКА И ГАЛЕРИЯ (АНИМАЦИИ)           */
-/* ========================================= */
-
-/* Бадж с бройката в количката */
 .cart-badge {
-  background-color: #ff4d4d;
-  color: white;
+  background: var(--accent-gradient);
+  color: #000;
   font-size: 0.75rem;
   font-weight: bold;
   padding: 2px 6px;
   border-radius: 50%;
   position: absolute;
-  top: -8px;
+  top: -10px;
   right: -10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
-
-/* Анимация за "подскачане" на количката */
-.bump-anim {
-  animation: bump 0.3s ease-out;
-}
-
-@keyframes bump {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.3); }
-  100% { transform: scale(1); }
-}
-
-/* Галерия с миниатюри (Product Details) */
-.thumbnail {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 12px;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: all 0.2s ease;
-}
-.thumbnail:hover { transform: translateY(-3px); }
-.thumbnail.active { border-color: #00d2ff; }
 
 /* ========================================= */
-/* 🌿 LIVE DEMO АНИМАЦИИ                     */
+/* 🚀 LANDING PAGE                           */
 /* ========================================= */
-
-.demo-container {
+.landing-page {
   display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
+  flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
-.virtual-pot {
+.hero-section {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1rem;
+  position: relative;
   width: 100%;
-  height: 400px;
-  background: linear-gradient(to bottom, #87CEEB, #e0f6ff);
-  border-radius: 24px;
+  overflow: hidden;
+}
+
+/* Liquid Gradient Orbs in Background */
+.hero-section::before, .hero-section::after {
+  content: '';
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  z-index: -1;
+  filter: blur(100px);
+  opacity: 0.5;
+  animation: float 10s infinite ease-in-out alternate;
+}
+
+.hero-section::before {
+  top: -10%;
+  left: -10%;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.hero-section::after {
+  bottom: -10%;
+  right: -10%;
+  background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+  animation-delay: -5s;
+}
+
+@keyframes float {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(50px, 50px) scale(1.1); }
+}
+
+body.light-mode .hero-section::before {
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+}
+body.light-mode .hero-section::after {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+}
+
+.gradient-text {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 1;
+}
+
+.hero-content h1 {
+  font-size: 5rem;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  max-width: 900px;
+  color: var(--text-primary);
+  text-shadow: 0 10px 30px rgba(0, 240, 255, 0.1);
+}
+
+.hero-content p {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+/* Liquid Glass Buttons */
+.water-button {
+  background: var(--accent-gradient);
+  color: #000;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   position: relative;
   overflow: hidden;
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
-  transition: background 0.5s ease;
+  box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
 }
 
-/* Слънцето */
-.demo-sun {
+.water-button::after {
+  content: '';
   position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 60px;
-  transition: all 0.5s ease;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-25deg);
+  animation: shine 3s infinite;
 }
 
-/* Почвата */
-.demo-soil {
+@keyframes shine {
+  0% { left: -100%; }
+  20% { left: 200%; }
+  100% { left: 200%; }
+}
+
+.water-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0, 240, 255, 0.4);
+}
+
+.water-button.secondary-btn {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .water-button.secondary-btn {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.water-button.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .water-button.secondary-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Premium Liquid Glass Card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 2rem;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+body.light-mode .glass-card {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+}
+
+.glass-card::before {
+  content: '';
   position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 30%;
-  transition: background-color 0.8s ease;
-  border-top: 4px solid rgba(0,0,0,0.1);
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.2), rgba(255,255,255,0));
 }
 
-/* Цветето */
-.demo-plant {
-  position: absolute;
-  bottom: 25%;
-  left: 50%;
-  transform-origin: bottom center;
-  font-size: 120px;
-  margin-left: -60px; /* Центриране */
-  transition: all 1.5s ease-in-out;
-  z-index: 2;
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 240, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Състояния на цветето */
-.plant-thriving {
-  transform: scale(1.1) rotate(0deg);
-  filter: brightness(1.1);
-}
-.plant-normal {
-  transform: scale(1) rotate(0deg);
-}
-.plant-wilted {
-  transform: scale(0.85) rotate(35deg); /* Накланя се като увехнало */
-  filter: grayscale(60%) sepia(60%) hue-rotate(-30deg); /* Пожълтява и потъмнява */
+body.light-mode .glass-card:hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* Aqua-Sense Устройството */
-.demo-device {
-  position: absolute;
-  bottom: 25%;
-  left: 20%;
-  width: 40px;
-  height: 100px;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+/* ========================================= */
+/* 🔑 AUTH FORMS (LOGIN & REGISTRATION)      */
+/* ========================================= */
+.login-page {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding-top: 10px;
-  z-index: 3;
+  align-items: center;
+  min-height: 85vh;
+  padding: 2rem;
+  position: relative;
 }
 
-/* Синята лампичка на устройството */
-.device-led {
-  width: 8px;
-  height: 8px;
+.login-page::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: var(--accent-primary);
+  filter: blur(150px);
+  opacity: 0.15;
   border-radius: 50%;
-  background: #333;
+  z-index: -1;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 450px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.auth-form input, .auth-form textarea {
+  width: 100%;
+  padding: 1.2rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
   transition: all 0.3s ease;
 }
-.device-led.active {
-  background: #00d2ff;
-  box-shadow: 0 0 10px #00d2ff;
+
+body.light-mode .auth-form input, body.light-mode .auth-form textarea {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* Капещата вода */
-.water-drop {
-  position: absolute;
-  top: 40px;
-  left: 50%;
-  margin-left: -10px;
-  font-size: 20px;
-  opacity: 0;
-}
-.water-drop.flowing {
-  animation: drip 1s infinite;
+.auth-form input:focus, .auth-form textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
 }
 
-@keyframes drip {
-  0% { top: 40px; opacity: 1; transform: scale(1); }
-  100% { top: 150px; opacity: 0; transform: scale(0.5); }
+body.light-mode .auth-form input:focus, body.light-mode .auth-form textarea:focus {
+  background: rgba(255, 255, 255, 0.8);
 }
 
-/* Стил за слайдерите */
-.demo-slider {
+.alert-message {
+  color: #ff4d4d;
+  background: rgba(255, 77, 77, 0.1);
+  border: 1px solid rgba(255, 77, 77, 0.2);
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* ========================================= */
+/* 📊 DASHBOARD & LIVE DEMO                  */
+/* ========================================= */
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
   width: 100%;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.card {
+  text-align: center;
+}
+
+.card h3 {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.card .value {
+  font-size: 3rem;
+  font-weight: 800;
+  font-family: var(--font-heading);
+}
+
+/* ========================================= */
+/* 🌿 LIVE DEMO LIQUID GLASS ELEMENTS        */
+/* ========================================= */
+.demo-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.1);
+  outline: none;
   margin: 15px 0;
-  accent-color: #00d2ff;
+}
+
+body.light-mode .demo-slider {
+  background: rgba(0,0,0,0.1);
+}
+
+.demo-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+  box-shadow: 0 0 15px var(--accent-primary);
+  transition: transform 0.2s;
+}
+
+.demo-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* ========================================= */
+/* 📱 RESPONSIVE                             */
+/* ========================================= */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+  .navbar {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 2rem;
+  }
+  .water-button {
+    width: 100%;
+  }
 }

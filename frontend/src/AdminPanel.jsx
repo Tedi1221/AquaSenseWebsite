@@ -98,9 +98,9 @@ function AdminPanel() {
             <div className="glass-card" style={{ width: '100%', marginBottom: '20px' }}>
               <h3>{editingId ? '✏️ Редактирай' : '➕ Добави продукт'}</h3>
               <form onSubmit={handleProductSubmit} className="auth-form">
-                <input type="text" placeholder="Име" value={newProduct.name} onChange={(e) => setNewProduct({...newProduct, name: e.target.value})} required style={{background:'#111'}}/>
-                <input type="number" placeholder="Цена (€)" value={newProduct.price} onChange={(e) => setNewProduct({...newProduct, price: e.target.value})} required style={{background:'#111'}}/>
-                <textarea placeholder="Описание" value={newProduct.description} onChange={(e) => setNewProduct({...newProduct, description: e.target.value})} required style={{background:'#111', width: '100%', padding: '10px', borderRadius: '8px', border: 'none', color: 'white', minHeight: '60px', fontFamily: 'inherit'}}/>
+                <input type="text" placeholder="Име" value={newProduct.name} onChange={(e) => setNewProduct({...newProduct, name: e.target.value})} required />
+                <input type="number" placeholder="Цена (€)" value={newProduct.price} onChange={(e) => setNewProduct({...newProduct, price: e.target.value})} required />
+                <textarea placeholder="Описание" value={newProduct.description} onChange={(e) => setNewProduct({...newProduct, description: e.target.value})} required rows={3} />
                 
                 {/* КАЧВАНЕ НА СНИМКИ */}
                 <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', marginTop: '10px' }}>
@@ -201,7 +201,7 @@ function AdminPanel() {
                     {ticket.status === 'Open' ? (
                       replyingTo === ticket._id ? (
                         <div style={{ marginTop: '10px' }}>
-                          <textarea placeholder="Напишете отговор..." value={replyText} onChange={(e) => setReplyText(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: 'none', background: '#111', color: 'white', minHeight: '80px', marginBottom: '10px', fontFamily: 'inherit' }} />
+                          <textarea placeholder="Напишете отговор..." value={replyText} onChange={(e) => setReplyText(e.target.value)} rows={3} className="auth-form" style={{ marginBottom: '10px' }} />
                           <div style={{ display: 'flex', gap: '10px' }}>
                             <button onClick={() => handleReplySubmit(ticket._id)} className="water-button" style={{ background: '#00d2ff', color: '#121212', padding: '5px 15px', fontSize: '0.9rem' }}>Изпрати отговор</button>
                             <button onClick={() => {setReplyingTo(null); setReplyText('');}} className="water-button" style={{ background: '#333', padding: '5px 15px', fontSize: '0.9rem' }}>Отказ</button>
